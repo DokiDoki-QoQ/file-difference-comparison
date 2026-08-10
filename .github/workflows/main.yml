@@ -22,7 +22,6 @@ jobs:
             autoconf automake libtool libtool-bin libltdl-dev autoconf-archive m4 pkg-config zlib1g-dev \
             libbz2-dev liblzma-dev libncurses5-dev libncursesw5-dev libtinfo-dev \
             libreadline-dev libsqlite3-dev tk-dev libffi-dev libssl-dev build-essential gettext
-          # 在此处追加 libtoolize 命令，修复 LT_SYS_SYMBOL_USCORE 宏缺失问题
           libtoolize --force --install
 
       - name: Install Buildozer, Cython and python-for-android
@@ -34,6 +33,16 @@ jobs:
         run: |
           git clone https://gitee.com/jupiter-001/file-difference-comparison.git
           ls -la file-difference-comparison/
+
+      - name: Fix package version conflicts in buildozer.spec
+        run: |
+          cd file-difference-comparison
+          # 备份原文件
+          cp buildozer.spec buildozer.spec.bak
+          # 替换 requirements 行为锁定版本（使用 sed 兼容格式）
+          sed -i 's/^requirements.*/requirements = python3,kivy,pypdf==5.1.0,python-docx==0.8.11,openpyxl==3.11.0,python-pptx==0.6.23,requests/' buildozer.spec
+          echo "Updated requirements:"
+          grep "^requirements" buildozer.spec
 
       - name: Build APK
         run: |
