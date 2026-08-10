@@ -15,14 +15,14 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install system dependencies
+      - name: Install system dependencies and libtoolize
         run: |
           sudo apt update
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip \
             autoconf automake libtool libtool-bin libltdl-dev autoconf-archive m4 pkg-config zlib1g-dev \
             libbz2-dev liblzma-dev libncurses5-dev libncursesw5-dev libtinfo-dev \
             libreadline-dev libsqlite3-dev tk-dev libffi-dev libssl-dev build-essential gettext
-          # Regenerate libtool m4 files to ensure LT_SYS_SYMBOL_USCORE macro is available
+          # 在此处追加 libtoolize 命令，修复 LT_SYS_SYMBOL_USCORE 宏缺失问题
           libtoolize --force --install
 
       - name: Install Buildozer, Cython and python-for-android
@@ -36,16 +36,6 @@ jobs:
           ls -la file-difference-comparison/
 
       - name: Build APK
-        run: |
-          cd file-difference-comparison
-          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-          yes | buildozer -v android debug
-
-      - name: Upload APK as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: diffapp-apk
-          path: file-difference-comparison/bin/*.apk
         run: |
           cd file-difference-comparison
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
