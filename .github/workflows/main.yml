@@ -19,8 +19,9 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip \
-            autoconf libtool pkg-config zlib1g-dev libncurses5-dev \
-            libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev
+            autoconf automake libtool libtool-bin m4 pkg-config zlib1g-dev \
+            libbz2-dev liblzma-dev libncurses5-dev libncursesw5-dev libtinfo-dev \
+            libreadline-dev libsqlite3-dev tk-dev libffi-dev libssl-dev build-essential
 
       - name: Install Buildozer and Cython
         run: |
